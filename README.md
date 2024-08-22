@@ -15,7 +15,7 @@ A C# and WPF-based SFTP client application that provides secure and user-friendl
 ## Installation
 
 1. Clone the repository:
-   ```bash git clone https://github.com/YourUsername/SFTPClient.git
+   bash git clone https://github.com/YourUsername/SFTPClient.git
 2. Open the project in Visual Studio.
 3. Restore NuGet packages and build the solution.
 4. Run the application.
