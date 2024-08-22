@@ -26,6 +26,24 @@ A C# and WPF-based SFTP client application that provides secure and user-friendl
 3. Connect to the server and manage your files with ease.
 4. Customize the application settings according to your preferences.
 
+## Latest Release
+
+### [v1.0.0 - Initial Release](https://github.com/kubalimacit/SFTPClient/releases/tag/v1.0.0)
+
+This is the first official release of the SFTPClient application. It includes the following features:
+
+- Secure file transfer via SFTP protocol.
+- User-friendly interface with customizable themes.
+- Session management for saving and recalling server connections.
+- File operations like copy, paste, delete, compress, and manage permissions.
+- Multi-language support with English and Turkish options.
+
+[**Download the latest version**](https://github.com/kubalimacit/SFTPClient/releases/latest)
+
+---
+
+For more information, visit the [documentation](#) or check out the [source code](#).
+
 ## Contributions
 Contributions are welcome! Feel free to submit a pull request or open an issue if you find any bugs or have suggestions for new features.
 
