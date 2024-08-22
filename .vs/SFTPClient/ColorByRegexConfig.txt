@@ -1,0 +1,10 @@
+// Bu dosya, belge sekmelerini normal ifadelere göre renklendiren kurallar içeriyor. Her satır, bir dosyanın tam yoluyla test edilecek bir normal ifade içerir. Normal ifadeyle eşleşen tüm dosyalar bir renk paylaşır.
+// Sekmeye sağ tıklayıp "Sekme Rengini Ayarla" seçeneğini belirleyerek herhangi bir dosya grubuna atanan rengi özelleştirebilirsiniz.
+// Normal ifadeler bu dosyada görünecekleri sırada eşleşir. Söz dizimi için bkz. https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expressions.
+// Normal ifadeler varsayılan olarak büyük/küçük harfe duyarsız olarak eşlenir. "(?-i:expression)" gibi yakalama grubu seçeneklerini kullanarak bu davranışı geçersiz kılabilirsiniz.
+// Değişikliklerinizin hemen uygulandığını görmek için bu dosyayı düzenleyin ve değişikliklerinizi kaydedin. İfadeler ayrıştırılırken veya değerlendirilirken karşılaşılan hatalar Çıkış Penceresi’nde "Normal İfadeye göre renk" adlı bölmede görünür.
+^.*\.cs$
+^.*\.fs$
+^.*\.vb$
+^.*\.cp?p?$
+^.*\.hp?p?$

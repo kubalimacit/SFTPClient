@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <!-- Bu satırı ekleyin -->
+
+    <sys:String x:Key="MenuFile">Dosya</sys:String>
+    <sys:String x:Key="MenuHelp">Yardım</sys:String>
+    <sys:String x:Key="ButtonOK">Tamam</sys:String>
+    <sys:String x:Key="ButtonCancel">İptal</sys:String>
+
+</ResourceDictionary>

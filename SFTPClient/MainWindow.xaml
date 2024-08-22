@@ -1,0 +1,212 @@
+﻿<mah:MetroWindow x:Class="SFTPClient.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:local="clr-namespace:SFTPClient"
+                 GlowBrush="{DynamicResource MahApps.Brushes.Accent}" NonActiveGlowBrush="Black"
+                 ShowIconOnTitleBar="True" ShowTitleBar="True" TitleCharacterCasing="Normal"
+                 Icon="img/icon.ico" WindowTitleBrush="{DynamicResource ThemeColorBrush}"
+                 Title="SFTP Client" WindowStartupLocation="CenterScreen" Height="750" Width="1100" MinHeight="500" MinWidth="800" FontFamily="Century Gothic">
+
+    <!-- Burada Resources bölümü ekleniyor -->
+    <mah:MetroWindow.Resources>
+        <!-- FileTypeToIconConverter sınıfını bir kaynak olarak tanımlıyoruz -->
+
+        <!-- Varsayılan dil İngilizce, ResourceDictionary'yi buraya ekleyebilirsiniz -->
+        <ResourceDictionary>
+            <local:FileTypeToIconConverter x:Key="FileTypeToIconConverter"/>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Strings.en.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </mah:MetroWindow.Resources>
+
+    <!-- Grid tanımlaması ile 4 alan oluşturuluyor -->
+    <Grid CacheMode="BitmapCache">
+        <!-- Satır tanımları -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- 1. Alan: Menü için -->
+            <RowDefinition Height="Auto"/>
+            <!-- 2. Alan: TextBoxlar ve Connect/Disconnect/Save Session Butonları -->
+            <RowDefinition Height="*"/>
+            <!-- 3. Alan: WrapPanel ve ListView -->
+            <RowDefinition Height="Auto"/>
+            <!-- 4. Alan: Durum alanı -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. Alan: Menü -->
+        <Grid Grid.Row="0" Margin="10">
+            <Menu FontSize="14">
+                <MenuItem Header="File">
+                    <MenuItem Header="Settings" Click="SettingsMenuItem_Click"/>
+                    <MenuItem Header="Exit" Click="ExitMenuItem_Click"/>
+
+                </MenuItem>
+                <MenuItem Header="Help" Click="HelpMenuItem_Click">
+                </MenuItem>
+            </Menu>
+        </Grid>
+
+        <!-- 2. Alan: ComboBox, TextBoxlar ve Connect/Disconnect/Save Session Butonları -->
+        <Grid Grid.Row="1" Margin="0">
+            <Border BorderThickness="1" BorderBrush="Black">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0">
+                    <ComboBox x:Name="ProtocolComboBox" Width="60" Margin="5" SelectionChanged="ProtocolComboBox_SelectionChanged">
+                        <ComboBoxItem Content="FTP" IsEnabled="False"/>
+                        <ComboBoxItem Content="SFTP" IsSelected="True"/>
+                    </ComboBox>
+
+                    <TextBox x:Name="IpAddressTextBox" Width="150" Margin="5"
+                             mah:TextBoxHelper.Watermark="Server Adresses"
+                             mah:TextBoxHelper.ClearTextButton="True"
+                             mah:TextBoxHelper.UseFloatingWatermark="True"/>
+                    <TextBox x:Name="UsernameTextBox" Width="150" Margin="5" 
+                             mah:TextBoxHelper.Watermark="Username"
+                             mah:TextBoxHelper.ClearTextButton="True"
+                             mah:TextBoxHelper.UseFloatingWatermark="True"/>
+                    <PasswordBox x:Name="PasswordBox" Width="150" Margin="5" 
+                             mah:TextBoxHelper.UseFloatingWatermark="True"
+                             mah:TextBoxHelper.Watermark="Password" 
+                             Style="{StaticResource MahApps.Styles.PasswordBox.Win8}"/>
+                    <TextBox x:Name="PortTextBox" Width="50" Margin="5" Text="22"
+                             mah:TextBoxHelper.Watermark="Port"
+                             mah:TextBoxHelper.UseFloatingWatermark="True"/>
+                    <!-- Connect/Disconnect Button -->
+                    <Button x:Name="ConnectDisconnectButton" Cursor="Hand" Width="45" Height="45" Click="ConnectDisconnectButton_Click">
+                        <iconPacks:PackIconMaterial x:Name="ConnectDisconnectIcon" Kind="Connection" Width="30" Height="30" Foreground="{DynamicResource ThemeColorBrush}"/>
+                    </Button>
+
+                    <Button x:Name="SaveSessionButton" Margin="5" Cursor="Hand" Width="45" Height="45" Click="SaveSessionButton_Click">
+                        <iconPacks:PackIconMaterial Kind="ContentSavePlus" Width="30" Height="30" Foreground="{DynamicResource ThemeColorBrush}"/>
+                    </Button>
+
+                    <ComboBox x:Name="SessionComboBox" Width="150" Margin="5" SelectionChanged="SessionComboBox_SelectionChanged"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- 3. Alan: WrapPanel ve ListView -->
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- WrapPanel: Breadcrumb ve Back Button -->
+            <WrapPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Button x:Name="BackButton" Cursor="Hand" BorderThickness="0" Width="35" Height="35" Style="{DynamicResource MahApps.Styles.Button.Circle}" Click="BackButton_Click">
+                    <iconPacks:PackIconMaterial Kind="ArrowLeftCircle" Width="25" Height="25" Foreground="{DynamicResource ThemeColorBrush}"/>
+                </Button>
+                <Button x:Name="RefreshButton" Cursor="Hand" BorderThickness="0" Width="35" Height="35" Style="{DynamicResource MahApps.Styles.Button.Circle}" Click="RefreshButton_Click" IsEnabled="False">
+                    <iconPacks:PackIconMaterial Kind="Refresh" Width="25" Height="25" Foreground="{DynamicResource ThemeColorBrush}"/>
+                </Button>
+                <TextBlock x:Name="Breadcrumb" FontSize="20" Text="/" Margin="10,5,0,0"/>
+                <TextBox x:Name="SearchTextBox" Width="150"  Margin="5" VerticalAlignment="Center" TextChanged="SearchTextBox_TextChanged" mah:TextBoxHelper.Watermark="Filter..."
+                mah:TextBoxHelper.ClearTextButton="True" mah:TextBoxHelper.UseFloatingWatermark="True" Visibility="Visible"/>
+            </WrapPanel>
+            <ListView Grid.Row="1" x:Name="FilesListView" Margin="0,5,0,0" BorderThickness="1" 
+          MouseDoubleClick="FilesListView_MouseDoubleClick"
+          PreviewMouseMove="FilesListView_PreviewMouseMove"
+          AllowDrop="True" DragEnter="FilesListView_DragEnter" DragOver="FilesListView_DragOver" Drop="FilesListView_Drop"
+          SelectionMode="Extended" SelectionChanged="FilesListView_SelectionChanged">
+                <!-- Context Menu -->
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy" Click="CopyMenuItem_Click">
+                            <MenuItem.Icon>
+                                <iconPacks:PackIconMaterial Kind="ContentCopy" Width="16" Height="16" Foreground="{DynamicResource ThemeColorBrush}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem x:Name="PasteMenuItem" Header="Paste" Click="PasteMenuItem_Click">
+                            <MenuItem.Icon>
+                                <iconPacks:PackIconMaterial Kind="ClipboardCheckOutline" Width="16" Height="16" Foreground="{DynamicResource ThemeColorBrush}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Delete" Click="DeleteMenuItem_Click">
+                            <MenuItem.Icon>
+                                <iconPacks:PackIconMaterial Kind="Delete" Width="16" Height="16" Foreground="#FF0000"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Refresh" Click="RefreshMenuItem_Click">
+                            <MenuItem.Icon>
+                                <iconPacks:PackIconMaterial Kind="Refresh" Width="16" Height="16" Foreground="{DynamicResource ThemeColorBrush}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Properties" Click="PropertiesMenuItem_Click">
+                            <MenuItem.Icon>
+                                <iconPacks:PackIconMaterial Kind="CogBox" Width="16" Height="16" Foreground="{DynamicResource ThemeColorBrush}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <!-- Çoklu seçim için SelectionMode ayarlanıyor -->
+                <ListView.View>
+                    <GridView>
+                        <!-- İkon sütunu -->
+                        <GridViewColumn Width="34">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <iconPacks:PackIconMaterial 
+                            Kind="{Binding Type, Converter={StaticResource FileTypeToIconConverter}}" 
+                            Width="20" Height="20" Foreground="{DynamicResource ThemeColorBrush}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!-- İsim sütunu -->
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="300"/>
+
+                        <!-- Tür sütunu -->
+                        <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="100"/>
+
+                        <!-- Boyut sütunu -->
+                        <GridViewColumn Header="Size" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Size}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <!-- Operations sütunu -->
+                        <GridViewColumn Header="Operations" Width="100">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <!-- Copy Icon -->
+                                        <Button Width="30" Height="30" Cursor="Hand" Margin="0,0,5,0" ToolTip="Send to Desktop" 
+                                    Click="CopyButton_Click">
+                                            <iconPacks:PackIconMaterial Kind="ContentCopy" Width="16" Height="16" Foreground="{DynamicResource ThemeColorBrush}"/>
+                                        </Button>
+                                        <!-- Delete Icon -->
+                                        <Button Width="30" Height="30" Cursor="Hand" ToolTip="Delete"  Click="DeleteButton_Click">
+                                            <iconPacks:PackIconMaterial Kind="Delete" Width="16" Height="16" Foreground="#FF0000"/>
+                                        </Button>
+                                        
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </Grid>
+
+        <!-- 4. Alan: Durum alanı -->
+        <StatusBar Grid.Row="3" Background="{DynamicResource ThemeColorBrush}">
+            <StatusBarItem>
+                <TextBlock x:Name="ConnectionStatusTextBlock" FontSize="14" Foreground="White" Text="Not Connected" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="SelectionStatusTextBlock" FontSize="14" Foreground="White" Text="" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</mah:MetroWindow>
